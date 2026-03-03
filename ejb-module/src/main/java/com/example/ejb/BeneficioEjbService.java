@@ -1,5 +1,6 @@
 package com.example.ejb;
 
+import com.example.ejb.model.Beneficio;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
