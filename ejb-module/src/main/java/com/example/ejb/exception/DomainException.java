@@ -1,4 +1,4 @@
-package com.example.ejb;
+package com.example.ejb.exception;
 
 public class DomainException extends RuntimeException {
     public DomainException(String message) {
