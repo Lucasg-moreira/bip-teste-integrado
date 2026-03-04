@@ -23,8 +23,8 @@ public class BeneficioEjbService implements IBeneficioEjbService {
     @PersistenceContext(unitName = "beneficioPU")
     private EntityManager em;
 
-    private final RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
-    private final int SCALE = 2;
+    private static final  RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
+    private static final int SCALE = 2;
 
     @Override
     public Beneficio criar(String nome, BigDecimal valor) {
@@ -73,10 +73,31 @@ public class BeneficioEjbService implements IBeneficioEjbService {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
-        Beneficio from = em.find(Beneficio.class, fromId);
-        Beneficio to   = em.find(Beneficio.class, toId);
+        if (fromId == null || toId == null) {
+            throw new IllegalArgumentException("IDs não podem ser nulos");
+        }
 
-        // BUG: sem validações, sem locking, pode gerar saldo negativo e lost update
+        if (fromId.equals(toId)) {
+            throw new IllegalArgumentException("Conta origem e destino não podem ser iguais");
+        }
+
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor da transferência deve ser positivo");
+        }
+
+        amount = normalizaValor(amount);
+
+        Beneficio from = getBeneficio(fromId);
+        Beneficio to = getBeneficio(toId);
+
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("Conta não encontrada");
+        }
+
+        if (from.getValor().compareTo(amount) < 0) {
+            throw new IllegalStateException("Saldo insuficiente");
+        }
+
         from.setValor(from.getValor().subtract(amount));
         to.setValor(to.getValor().add(amount));
     }
