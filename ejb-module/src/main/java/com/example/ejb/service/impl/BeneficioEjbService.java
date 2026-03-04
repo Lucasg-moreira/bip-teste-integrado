@@ -1,16 +1,15 @@
 package com.example.ejb.service.impl;
 
-import com.example.ejb.DomainException;
+import com.example.ejb.exception.DomainException;
 import com.example.ejb.model.Beneficio;
+import com.example.ejb.repository.BeneficioRepository;
 import com.example.ejb.service.IBeneficioEjbService;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.LockModeType;
-import jakarta.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -20,11 +19,11 @@ import java.util.List;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class BeneficioEjbService implements IBeneficioEjbService {
 
-    @PersistenceContext(unitName = "beneficioPU")
-    private EntityManager em;
-
     private static final  RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
     private static final int SCALE = 2;
+
+    @EJB
+    BeneficioRepository beneficioRepository;
 
     @Override
     public Beneficio criar(String nome, BigDecimal valor) {
@@ -36,10 +35,7 @@ public class BeneficioEjbService implements IBeneficioEjbService {
                 .valor(normalizaValor(valor))
                 .build();
 
-        em.persist(beneficio);
-        em.flush();
-
-        return getBeneficio(beneficio.getId()) ;
+        return beneficioRepository.criar(beneficio);
     }
 
     @Override
@@ -51,7 +47,7 @@ public class BeneficioEjbService implements IBeneficioEjbService {
 
         validaSave(nome, valor);
 
-        Beneficio beneficio = getBeneficio(id);
+        Beneficio beneficio = beneficioRepository.buscarPorId(id);
 
         if (beneficio == null) {
             throw new EntityNotFoundException("Benefício não encontrado");
@@ -60,15 +56,12 @@ public class BeneficioEjbService implements IBeneficioEjbService {
         beneficio.setNome(nome);
         beneficio.setValor(valor);
 
-        em.merge(beneficio);
+        beneficioRepository.atualizar(beneficio);
     }
 
     @Override
     public List<Beneficio> buscarTodos() {
-        return em.createQuery(
-                "SELECT b FROM Beneficio b",
-                Beneficio.class
-        ).getResultList();
+        return beneficioRepository.buscarTodos();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -87,8 +80,8 @@ public class BeneficioEjbService implements IBeneficioEjbService {
 
         amount = normalizaValor(amount);
 
-        Beneficio from = getBeneficio(fromId);
-        Beneficio to = getBeneficio(toId);
+        Beneficio from = beneficioRepository.buscarPorId(fromId);
+        Beneficio to = beneficioRepository.buscarPorId(toId);
 
         if (from == null || to == null) {
             throw new IllegalArgumentException("Conta não encontrada");
@@ -100,10 +93,9 @@ public class BeneficioEjbService implements IBeneficioEjbService {
 
         from.setValor(from.getValor().subtract(amount));
         to.setValor(to.getValor().add(amount));
-    }
 
-    private Beneficio getBeneficio(Long fromId) {
-        return em.find(Beneficio.class, fromId, LockModeType.PESSIMISTIC_WRITE);
+        beneficioRepository.atualizar(from);
+        beneficioRepository.atualizar(to);
     }
 
     private BigDecimal normalizaValor(BigDecimal valor) {
