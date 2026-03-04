@@ -23,8 +23,7 @@ public class BeneficioService implements IBeneficioService {
 
         var response = beneficioEjbService.criar(dto.nome(), dto.valor());
 
-
-        return new BeneficioResponseDTO(null, dto.nome(), dto.valor());
+        return new BeneficioResponseDTO(response.getId(), dto.nome(), dto.valor());
     }
 
     public BeneficioResponseDTO atualizar(Long id, BeneficioRequestDTO dto) {
