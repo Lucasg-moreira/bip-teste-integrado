@@ -11,3 +11,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+ejb:
+  url: http-remoting://localhost:8080
+  context: org.wildfly.naming.client.WildFlyInitialContextFactory
