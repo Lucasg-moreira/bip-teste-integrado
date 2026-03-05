@@ -7,8 +7,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class JpaBeneficioRepository implements BeneficioRepository {
@@ -17,7 +17,8 @@ public class JpaBeneficioRepository implements BeneficioRepository {
 
     @Override
     public Beneficio buscarPorId(Long id) {
-        return em.find(Beneficio.class, id, LockModeType.PESSIMISTIC_WRITE);
+        Beneficio beneficio = em.find(Beneficio.class, id, LockModeType.PESSIMISTIC_WRITE);
+        return Optional.ofNullable(beneficio).orElse(new Beneficio());
     }
 
     @Override

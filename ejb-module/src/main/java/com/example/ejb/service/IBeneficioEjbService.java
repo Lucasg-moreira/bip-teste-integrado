@@ -12,7 +12,7 @@ public interface IBeneficioEjbService {
 
     Beneficio criar(String nome, BigDecimal valor);
 
-    void atualizar(Long id, String nome, BigDecimal valor);
+    Beneficio atualizar(Long id, String nome, BigDecimal valor, String descricao, Boolean ativo);
 
     List<Beneficio> buscarTodos();
 

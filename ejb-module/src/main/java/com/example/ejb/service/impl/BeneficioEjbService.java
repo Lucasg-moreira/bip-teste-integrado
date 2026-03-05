@@ -39,7 +39,7 @@ public class BeneficioEjbService implements IBeneficioEjbService {
     }
 
     @Override
-    public void atualizar(Long id, String nome, BigDecimal valor) {
+    public Beneficio atualizar(Long id, String nome, BigDecimal valor, String descricao, Boolean ativo) {
 
         if (id == null) {
             throw new IllegalArgumentException("ID obrigatório");
@@ -55,8 +55,10 @@ public class BeneficioEjbService implements IBeneficioEjbService {
 
         beneficio.setNome(nome);
         beneficio.setValor(valor);
+        beneficio.setDescricao(descricao);
+        beneficio.setAtivo(ativo);
 
-        beneficioRepository.atualizar(beneficio);
+        return beneficioRepository.atualizar(beneficio);
     }
 
     @Override
