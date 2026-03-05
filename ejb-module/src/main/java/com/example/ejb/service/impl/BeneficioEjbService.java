@@ -67,15 +67,15 @@ public class BeneficioEjbService implements IBeneficioEjbService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
         if (fromId == null || toId == null) {
-            throw new IllegalArgumentException("IDs não podem ser nulos");
+            throw new DomainException("IDs não podem ser nulos");
         }
 
         if (fromId.equals(toId)) {
-            throw new IllegalArgumentException("Conta origem e destino não podem ser iguais");
+            throw new DomainException("Conta origem e destino não podem ser iguais");
         }
 
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Valor da transferência deve ser positivo");
+            throw new DomainException("Valor da transferência deve ser positivo");
         }
 
         amount = normalizaValor(amount);
@@ -84,11 +84,11 @@ public class BeneficioEjbService implements IBeneficioEjbService {
         Beneficio to = beneficioRepository.buscarPorId(toId);
 
         if (from == null || to == null) {
-            throw new IllegalArgumentException("Conta não encontrada");
+            throw new DomainException("Conta não encontrada");
         }
 
         if (from.getValor().compareTo(amount) < 0) {
-            throw new IllegalStateException("Saldo insuficiente");
+            throw new DomainException("Saldo insuficiente");
         }
 
         from.setValor(from.getValor().subtract(amount));
@@ -120,7 +120,7 @@ public class BeneficioEjbService implements IBeneficioEjbService {
         }
 
         if (valor.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Valor não pode ser negativo");
+            throw new DomainException("Valor não pode ser negativo");
         }
     }
 }
