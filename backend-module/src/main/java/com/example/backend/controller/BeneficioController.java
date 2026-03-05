@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.BeneficioRequestDTO;
 import com.example.backend.dto.BeneficioResponseDTO;
+import com.example.backend.dto.TransferRequestDTO;
 import com.example.backend.service.IBeneficioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -58,17 +58,11 @@ public class BeneficioController {
     })
     @PostMapping("/transferencia")
     public ResponseEntity<Void> transfer(
-            @Parameter(description = "ID do benefício de origem", example = "1")
-            @RequestParam Long fromId,
+            @Valid @RequestBody TransferRequestDTO transferRequest) {
 
-            @Parameter(description = "ID do benefício de destino", example = "2")
-            @RequestParam Long toId,
-
-            @Parameter(description = "Valor a ser transferido", example = "100.50")
-            @RequestParam BigDecimal amount) {
-
-        beneficioService.transfer(fromId, toId, amount);
-        return ResponseEntity.ok().build();
+        beneficioService.transfer(transferRequest.fromId(), transferRequest.toId(), transferRequest.amount());
+        return ResponseEntity
+                .ok().build();
     }
 
     @Operation(
@@ -82,9 +76,8 @@ public class BeneficioController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<BeneficioResponseDTO> put(
-            @Parameter(description = "ID do benefício", example = "1")
-            @PathVariable Long id,
-
+            @Parameter(description = "ID do benefício", example = "1", required = true)
+            @PathVariable("id") Long id,
             @RequestBody BeneficioRequestDTO dto) {
 
         BeneficioResponseDTO response = beneficioService.atualizar(id, dto);
