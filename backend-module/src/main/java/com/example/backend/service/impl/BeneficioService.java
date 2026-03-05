@@ -4,6 +4,7 @@ import com.example.backend.dto.BeneficioRequestDTO;
 import com.example.backend.dto.BeneficioResponseDTO;
 import com.example.backend.service.IBeneficioService;
 import com.example.ejb.service.IBeneficioEjbService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BeneficioService implements IBeneficioService {
 
     private final IBeneficioEjbService beneficioEjbService;
@@ -48,5 +50,6 @@ public class BeneficioService implements IBeneficioService {
     @Transactional
     public void transfer(Long fromId, Long toId, BigDecimal valor) {
         beneficioEjbService.transfer(fromId, toId, valor);
+        log.info("Transferência realizada: {} de {} para {}", valor, fromId, toId);
     }
 }
