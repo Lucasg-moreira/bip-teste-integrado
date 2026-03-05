@@ -1,0 +1,105 @@
+<div class="modal-overlay" (click)="cancelled.emit()">
+  <div class="modal modal-wide" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <span class="accent-yellow">⇄</span>
+        Transferência de Saldo
+      </h2>
+      <button class="modal-close" (click)="cancelled.emit()">×</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+
+        <!-- Transfer Visual Preview -->
+        @if (fromBeneficio || toBeneficio) {
+          <div class="transfer-preview">
+            <div class="preview-card" [class.active]="!!fromBeneficio">
+              @if (fromBeneficio) {
+                <span class="preview-label">DE</span>
+                <span class="preview-name">{{ fromBeneficio.nome }}</span>
+                <span class="preview-value mono">R$ {{ fromBeneficio.valor | number:'1.2-2' }}</span>
+              } @else {
+                <span class="preview-placeholder">Selecione a origem</span>
+              }
+            </div>
+            <div class="transfer-arrow">
+              <span>→</span>
+            </div>
+            <div class="preview-card" [class.active]="!!toBeneficio">
+              @if (toBeneficio) {
+                <span class="preview-label">PARA</span>
+                <span class="preview-name">{{ toBeneficio.nome }}</span>
+                <span class="preview-value mono">R$ {{ toBeneficio.valor | number:'1.2-2' }}</span>
+              } @else {
+                <span class="preview-placeholder">Selecione o destino</span>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fromId">Origem</label>
+            <select id="fromId" class="form-control" formControlName="fromId">
+              <option [ngValue]="null" disabled>Selecionar benefício...</option>
+              @for (b of availableSources; track b.id) {
+                <option [ngValue]="b.id">{{ b.nome }} — R$ {{ b.valor | number:'1.2-2' }}</option>
+              }
+            </select>
+            @if (hasError('fromId', 'required')) {
+              <span class="error-msg">Selecione a origem</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="toId">Destino</label>
+            <select id="toId" class="form-control" formControlName="toId">
+              <option [ngValue]="null" disabled>Selecionar benefício...</option>
+              @for (b of availableTargets; track b.id) {
+                <option [ngValue]="b.id">{{ b.nome }} — R$ {{ b.valor | number:'1.2-2' }}</option>
+              }
+            </select>
+            @if (hasError('toId', 'required')) {
+              <span class="error-msg">Selecione o destino</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="amount">Valor da Transferência (R$)</label>
+          <input
+            id="amount"
+            type="number"
+            class="form-control mono amount-input"
+            formControlName="amount"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+          />
+          @if (hasError('amount', 'required')) {
+            <span class="error-msg">Valor é obrigatório</span>
+          }
+          @if (hasError('amount', 'min')) {
+            <span class="error-msg">Valor deve ser maior que zero</span>
+          }
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="cancelled.emit()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-transfer" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner"></span>
+          } @else {
+            <span>⇄</span>
+          }
+          Transferir
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

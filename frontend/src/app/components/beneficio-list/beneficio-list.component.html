@@ -1,0 +1,139 @@
+<div class="app-shell">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">Benefícios</span>
+        <span class="logo-version">v1</span>
+      </div>
+      <div class="header-subtitle">Sistema de Gerenciamento</div>
+    </div>
+
+    <div class="header-actions">
+      <button
+        class="btn btn-secondary"
+        (click)="abrirTransferencia()"
+        [disabled]="beneficios.length < 2"
+        title="{{ beneficios.length < 2 ? 'Mínimo de 2 benefícios para transferir' : '' }}"
+      >
+        <span>⇄</span>
+        Transferir
+      </button>
+      <button class="btn btn-primary" (click)="abrirCriar()">
+        <span>+</span>
+        Novo Benefício
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-label">TOTAL DE BENEFÍCIOS</span>
+      <span class="stat-value mono">{{ beneficios.length }}</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-label">SALDO CONSOLIDADO</span>
+      <span class="stat-value mono accent-green">R$ {{ totalSaldo | number:'1.2-2' }}</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-label">STATUS</span>
+      <span class="badge badge-green">● ATIVO</span>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="main-content">
+
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner spinner-lg"></div>
+        <span>Carregando benefícios...</span>
+      </div>
+    } @else if (beneficios.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">◫</div>
+        <h3>Nenhum benefício cadastrado</h3>
+        <p>Crie seu primeiro benefício para começar</p>
+        <button class="btn btn-primary" (click)="abrirCriar()">
+          + Criar Benefício
+        </button>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table class="beneficios-table">
+          <thead>
+            <tr>
+              <th class="col-id">#ID</th>
+              <th class="col-nome">NOME</th>
+              <th class="col-valor">SALDO (R$)</th>
+              <th class="col-status">STATUS</th>
+              <th class="col-actions">AÇÕES</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (b of beneficios; track b.id; let i = $index) {
+              <tr class="fade-in" [style.animation-delay]="i * 50 + 'ms'">
+                <td class="col-id">
+                  <span class="id-chip mono">{{ b.id }}</span>
+                </td>
+                <td class="col-nome">
+                  <div class="nome-cell">
+                    <span class="nome-icon">◈</span>
+                    <span class="nome-text">{{ b.nome }}</span>
+                  </div>
+                </td>
+                <td class="col-valor">
+                  <span class="valor mono" [class.valor-alto]="b.valor >= 1000">
+                    R$ {{ b.valor | number:'1.2-2' }}
+                  </span>
+                </td>
+                <td class="col-status">
+                  <span class="badge badge-green">ATIVO</span>
+                </td>
+                <td class="col-actions">
+                  <div class="actions-group">
+                    <button
+                      class="btn btn-secondary btn-sm"
+                      (click)="abrirEditar(b)"
+                      title="Editar benefício"
+                    >
+                      ✎ Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <span class="mono">API: http://localhost:8080/api/v1/beneficios</span>
+    <span class="separator">·</span>
+    <span>{{ beneficios.length }} registros carregados</span>
+  </footer>
+</div>
+
+<!-- Modals -->
+@if (showFormModal) {
+  <app-beneficio-form
+    [beneficio]="selectedBeneficio"
+    (saved)="onFormSaved()"
+    (cancelled)="showFormModal = false"
+  />
+}
+
+@if (showTransferenciaModal) {
+  <app-transferencia
+    [beneficios]="beneficios"
+    (transferred)="onTransferred()"
+    (cancelled)="showTransferenciaModal = false"
+  />
+}
