@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface IBeneficioService {
-    public BeneficioResponseDTO criar(BeneficioRequestDTO dto);
+    BeneficioResponseDTO criar(BeneficioRequestDTO dto);
     BeneficioResponseDTO atualizar(Long id, BeneficioRequestDTO dto);
     List<BeneficioResponseDTO> buscarTodos();
     void transfer(Long fromId, Long toId, BigDecimal valor);

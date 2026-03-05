@@ -1,7 +1,6 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.BeneficioRequestDTO;
-import com.example.backend.dto.BeneficioResponseDTO;
 import com.example.backend.service.impl.BeneficioService;
 import com.example.ejb.model.Beneficio;
 import com.example.ejb.service.impl.BeneficioEjbService;
