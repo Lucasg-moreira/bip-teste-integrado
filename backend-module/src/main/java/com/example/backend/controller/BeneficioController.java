@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/beneficios")
 @Tag(name = "Benefícios", description = "Gerenciamento de benefícios e transferências")
@@ -93,5 +94,23 @@ public class BeneficioController {
     @GetMapping
     public ResponseEntity<List<BeneficioResponseDTO>> get() {
         return ResponseEntity.ok(beneficioService.buscarTodos());
+    }
+
+    @Operation(
+            summary = "Deletar benefício",
+            description = "Remove um benefício existente pelo ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Benefício deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Benefício não encontrado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID do benefício", example = "1", required = true)
+            @PathVariable("id") Long id) {
+
+        beneficioService.deletar(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

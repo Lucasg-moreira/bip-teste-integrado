@@ -15,4 +15,6 @@ public interface IBeneficioEjbService {
     void atualizar(Long id, String nome, BigDecimal valor);
 
     List<Beneficio> buscarTodos();
+
+    void desativar(Long id);
 }

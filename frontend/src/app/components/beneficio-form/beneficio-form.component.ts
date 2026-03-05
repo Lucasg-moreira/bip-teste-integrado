@@ -26,7 +26,8 @@ export class BeneficioFormComponent implements OnChanges {
   form = this.fb.group({
     nome: ['', [Validators.required, Validators.minLength(2)]],
     descricao: [''],
-    valor: [null as number | null, [Validators.required, Validators.min(0.01)]]
+    valor: [null as number | null, [Validators.required, Validators.min(0.01)]],
+    ativo: [true]
   });
 
   get isEdit(): boolean {
@@ -37,7 +38,8 @@ export class BeneficioFormComponent implements OnChanges {
     if (this.beneficio) {
       this.form.patchValue({
         nome: this.beneficio.nome,
-        valor: this.beneficio.valor
+        valor: this.beneficio.valor,
+        ativo: this.beneficio.ativo
       });
     } else {
       this.form.reset();
@@ -54,7 +56,8 @@ export class BeneficioFormComponent implements OnChanges {
     const dto: BeneficioRequestDTO = {
       nome: this.form.value.nome!,
       descricao: this.form.value.descricao || undefined,
-      valor: this.form.value.valor!
+      valor: this.form.value.valor!,
+      ativo: this.form.value.ativo ?? true
     };
 
     const request = this.isEdit

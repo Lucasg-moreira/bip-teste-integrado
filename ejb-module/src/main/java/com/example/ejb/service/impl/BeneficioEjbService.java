@@ -64,6 +64,16 @@ public class BeneficioEjbService implements IBeneficioEjbService {
         return beneficioRepository.buscarTodos();
     }
 
+    @Override
+    public void desativar(Long id) {
+        Beneficio beneficio = beneficioRepository.buscarPorId(id);
+        if (beneficio != null && Boolean.FALSE.equals(beneficio.getAtivo())) {
+            throw new DomainException("Benefício já está desativado.");
+        }
+        beneficio.setAtivo(false);
+        beneficioRepository.atualizar(beneficio);
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
         if (fromId == null || toId == null) {

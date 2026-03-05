@@ -69,4 +69,19 @@ export class BeneficioListComponent implements OnInit {
   get totalSaldo(): number {
     return this.beneficios.reduce((acc, b) => acc + b.valor, 0);
   }
+
+  deletarBeneficio(beneficio: BeneficioResponseDTO): void {
+    if (!confirm(`Deseja realmente excluir "${beneficio.nome}"?`)) return;
+
+    this.beneficioService.deletar(beneficio.id).subscribe({
+      next: () => {
+        this.toastService.success('Benefício excluído com sucesso!');
+        this.carregarBeneficios();
+      },
+      error: (err) => {
+        const msg = err?.error?.message || 'Erro ao excluir benefício.';
+        this.toastService.error(msg);
+      }
+    });
+  }
 }

@@ -11,5 +11,7 @@ public record BeneficioResponseDTO (
         @Schema(description = "Nome do benefício", example = "Vale Alimentação")
         String nome,
         @Schema(description = "Saldo atual do benefício", example = "450.00")
-        BigDecimal valor) {}
+        BigDecimal valor,
+        @Schema(description = "Indica se o benefício está ativo", example = "true")
+        Boolean ativo) {}
 

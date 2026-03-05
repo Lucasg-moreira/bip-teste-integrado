@@ -52,4 +52,11 @@ public class BeneficioService implements IBeneficioService {
         beneficioEjbService.transfer(fromId, toId, valor);
         log.info("Transferência realizada: {} de {} para {}", valor, fromId, toId);
     }
+
+    @Override
+    @Transactional
+    public void deletar(Long id) {
+        log.info("Desativando beneficio de id: {}", id);
+        beneficioEjbService.desativar(id);
+    }
 }

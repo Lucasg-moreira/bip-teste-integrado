@@ -91,9 +91,18 @@
                     R$ {{ b.valor | number:'1.2-2' }}
                   </span>
                 </td>
-                <td class="col-status">
-                  <span class="badge badge-green">ATIVO</span>
-                </td>
+                  @if(b.ativo) {
+                      <td class="col-status">
+                          <span class="badge badge-green">ATIVO</span>
+                      </td>
+                  }
+
+                  @if(!b.ativo) {
+                      <td class="col-status">
+                          <span class="badge badge-red">INATIVO</span>
+                      </td>
+                  }
+
                 <td class="col-actions">
                   <div class="actions-group">
                     <button
@@ -102,6 +111,12 @@
                       title="Editar benefício"
                     >
                       ✎ Editar
+                    </button>
+                    <button
+                      class="btn btn-danger btn-sm"
+                      (click)="deletarBeneficio(b)"
+                      title="Excluir benefício">
+                          ✕ Excluir
                     </button>
                   </div>
                 </td>

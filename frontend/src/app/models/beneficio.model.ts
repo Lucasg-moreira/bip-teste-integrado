@@ -2,12 +2,14 @@ export interface BeneficioResponseDTO {
   id: number;
   nome: string;
   valor: number;
+  ativo: boolean;
 }
 
 export interface BeneficioRequestDTO {
   nome: string;
   descricao?: string;
-  valor: number;
+  valor: number,
+  ativo?: boolean;
 }
 
 export interface TransferRequestDTO {

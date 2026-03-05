@@ -11,4 +11,5 @@ public interface IBeneficioService {
     BeneficioResponseDTO atualizar(Long id, BeneficioRequestDTO dto);
     List<BeneficioResponseDTO> buscarTodos();
     void transfer(Long fromId, Long toId, BigDecimal valor);
+    void deletar(Long id);
 }

@@ -15,4 +15,7 @@ public record BeneficioRequestDTO (
         @Schema(description = "Saldo inicial do benefício", example = "500.00")
         @NotNull(message = "Valor obrigatório")
         @DecimalMin(value = "0.0", inclusive = false, message = "Valor deve ser positivo")
-        BigDecimal valor) {}
+        BigDecimal valor,
+        @Schema(description = "Indica se o benefício está ativo", example = "true")
+        @NotNull(message = "Valor obrigatório")
+        Boolean ativo) {}

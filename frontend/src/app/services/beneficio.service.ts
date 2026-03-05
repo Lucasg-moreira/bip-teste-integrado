@@ -26,4 +26,8 @@ export class BeneficioService {
   transferir(dto: TransferRequestDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/transferencia`, dto);
   }
+
+  deletar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
 }
