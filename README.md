@@ -87,7 +87,7 @@ java -jar target/backend.jar
 
 A aplicação irá subir em:
 
-    http://localhost:8080
+    http://localhost:8081
 
 ------------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ Banco em memória configurado como:
 
 Se habilitado, o console pode ser acessado em:
 
-    http://localhost:8080/h2-console
+    http://localhost:8081/h2-console
 
 ------------------------------------------------------------------------
 
@@ -107,13 +107,13 @@ Se habilitado, o console pode ser acessado em:
 
 Documentação da API:
 
-    http://localhost:8080/swagger-ui/index.html
+    http://localhost:8081/swagger-ui/index.html
 
 ------------------------------------------------------------------------
 
 ## 📡 Endpoint Base
 
-    http://localhost:8080/api/v1/beneficios
+    http://localhost:8081/api/v1/beneficios
 
 ------------------------------------------------------------------------
 
