@@ -69,10 +69,16 @@ public class BeneficioEjbService implements IBeneficioEjbService {
     @Override
     public void desativar(Long id) {
         Beneficio beneficio = beneficioRepository.buscarPorId(id);
-        if (beneficio != null && Boolean.FALSE.equals(beneficio.getAtivo())) {
+        if  (beneficio == null) {
+            return;
+        }
+
+        if (Boolean.FALSE.equals(beneficio.getAtivo())) {
             throw new DomainException("Benefício já está desativado.");
         }
+
         beneficio.setAtivo(false);
+
         beneficioRepository.atualizar(beneficio);
     }
 
@@ -131,7 +137,7 @@ public class BeneficioEjbService implements IBeneficioEjbService {
             throw new DomainException("Valor é obrigatório");
         }
 
-        if (valor.compareTo(BigDecimal.ZERO) < 0) {
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new DomainException("Valor não pode ser negativo");
         }
     }
